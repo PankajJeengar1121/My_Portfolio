@@ -1,0 +1,760 @@
+{% load static %}
+<!doctype html>
+<html lang="en" class="scroll-smooth dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pankaj Jeengar</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brand: "#2563eb",
+              brandDark: "#1d4ed8",
+              darkBase: "#000000",
+              darkCanvas: "#09090b",
+              lightBase: "#f3f4f6",
+              lightCanvas: "#ffffff",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["Fira Code", "monospace"],
+            },
+            animation: {
+              blob: "blob 7s infinite",
+            },
+            keyframes: {
+              blob: {
+                "0%": { transform: "translate(0px, 0px) scale(1)" },
+                "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                "100%": { transform: "translate(0px, 0px) scale(1)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Glass Canvas Shadow */
+      .content-canvas {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      }
+
+      /* T-Shirt Swap Animation */
+      /* Animation removed for instant swap */
+      .tshirt-swap {
+        /* No transition */
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-lightBase dark:bg-darkBase text-gray-900 dark:text-gray-100 antialiased selection:bg-brand selection:text-white"
+  >
+    <canvas
+      id="particleCanvas"
+      class="fixed top-0 left-0 w-full h-full -z-10 bg-lightBase dark:bg-darkBase"
+    ></canvas>
+
+    <div class="min-h-screen flex flex-col items-center p-2 md:p-8">
+      <main
+        class="content-canvas w-full max-w-6xl bg-lightCanvas dark:bg-darkCanvas rounded-xl md:rounded-[2.5rem] border border-gray-200 dark:border-gray-800 relative"
+      >
+        <header
+          class="sticky top-0 z-[100] bg-lightCanvas/80 dark:bg-darkCanvas/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 flex justify-between items-center px-4 py-4 md:px-10 transition-colors rounded-t-xl md:rounded-t-[2.5rem]"
+        >
+          <div class="flex items-center gap-2">
+            <div
+              class="w-8 h-8 bg-brand rounded flex items-center justify-center text-white font-bold text-sm"
+            >
+              <i class="fa-solid fa-code"></i>
+            </div>
+            <span class="text-lg font-bold tracking-tight"
+              >Pankaj<span class="text-brand">.Jeengar</span></span
+            >
+          </div>
+
+          <div class="flex items-center gap-4 md:gap-6">
+            <nav
+              class="hidden md:flex gap-6 text-sm font-medium text-gray-500 dark:text-gray-400"
+            >
+              <a href="#home" class="hover:text-brand transition">Home</a>
+              <a href="#about" class="hover:text-brand transition">About Me</a>
+              <a href="#skills" class="hover:text-brand transition">Skills</a>
+              <a href="#projects" class="hover:text-brand transition">Work</a>
+              <a href="#contact" class="hover:text-brand transition">Contact</a>
+            </nav>
+
+            <button
+              id="theme-toggle"
+              class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center border border-gray-200 dark:border-gray-700 hover:border-brand transition"
+            >
+              <i
+                id="theme-icon"
+                class="fa-solid fa-moon text-gray-600 dark:text-yellow-400 text-xs"
+              ></i>
+            </button>
+
+            <button
+              id="mobile-menu-btn"
+              class="md:hidden w-9 h-9 rounded-full bg-transparent flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-brand transition"
+            >
+              <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+          </div>
+        </header>
+
+        <div
+          id="mobile-menu"
+          class="hidden md:hidden fixed top-[73px] left-0 w-full bg-lightCanvas/95 dark:bg-darkCanvas/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 z-[90] p-6 shadow-xl"
+        >
+          <nav
+            class="flex flex-col gap-4 text-center text-lg font-medium text-gray-600 dark:text-gray-300"
+          >
+            <a href="#home" class="mobile-link hover:text-brand">Home</a>
+            <a href="#about" class="mobile-link hover:text-brand">About Me</a>
+            <a href="#skills" class="mobile-link hover:text-brand">Skills</a>
+            <a href="#projects" class="mobile-link hover:text-brand">Work</a>
+            <a href="#contact" class="mobile-link hover:text-brand">Contact</a>
+          </nav>
+        </div>
+
+        <section
+          id="home"
+          class="grid lg:grid-cols-2 gap-12 p-6 md:p-16 items-center border-b border-gray-100 dark:border-gray-800 relative overflow-hidden"
+        >
+          <div
+            class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-brand/10 rounded-full blur-3xl opacity-50 pointer-events-none"
+          ></div>
+
+          <div class="order-2 lg:order-1 relative z-10" data-aos="fade-right">
+            <div
+              class="relative inline-flex items-center justify-center mb-6 md:mb-8 group"
+            >
+              <span
+                class="absolute w-full h-full rounded-full bg-brand/50 opacity-75 animate-ping"
+              ></span>
+              <div
+                class="relative inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-gray-900 border border-brand/30 shadow-lg shadow-brand/20 z-10"
+              >
+                <span class="relative flex h-2 w-2">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"
+                  ></span>
+                  <span
+                    class="relative inline-flex rounded-full h-2 w-2 bg-brand"
+                  ></span>
+                </span>
+                <span
+                  class="text-brand text-xs font-bold uppercase tracking-wider"
+                  >Open to work</span
+                >
+              </div>
+            </div>
+
+            <h1
+              class="text-4xl sm:text-5xl md:text-7xl font-extrabold leading-[1.1] tracking-tight mb-6"
+            >
+              Pankaj <br />
+              <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-brand to-cyan-400"
+                >Jeengar.</span
+              >
+            </h1>
+
+            <p
+              class="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg leading-relaxed"
+            >
+              I am a student of <b>Artificial Intelligence & Data Science</b>. I
+              build full-stack apps and train models exclusively using the
+              <b>Python</b> ecosystem (Django, Pandas, PyTorch).
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+              <a
+                href="#contact"
+                class="px-8 py-3 bg-brand hover:bg-brandDark text-white font-bold rounded-lg transition shadow-lg shadow-brand/20 hover:-translate-y-1 text-center"
+                >Hire Me</a
+              >
+              <a
+                href="#projects"
+                class="px-8 py-3 border border-gray-200 dark:border-gray-700 hover:border-brand dark:hover:border-brand font-bold rounded-lg transition hover:-translate-y-1 text-center"
+                >View Projects</a
+              >
+            </div>
+
+            <div
+              class="mt-12 pt-8 border-t border-gray-100 dark:border-gray-800 flex gap-4 md:gap-8 justify-between md:justify-start"
+            >
+              <div class="text-center md:text-left">
+                <h4 class="text-xl md:text-2xl font-bold">3+</h4>
+                <p class="text-[10px] md:text-xs text-gray-500 uppercase">
+                  Years Coding
+                </p>
+              </div>
+              <div class="text-center md:text-left">
+                <h4 class="text-xl md:text-2xl font-bold">10+</h4>
+                <p class="text-[10px] md:text-xs text-gray-500 uppercase">
+                  Projects
+                </p>
+              </div>
+              <div class="text-center md:text-left">
+                <h4 class="text-xl md:text-2xl font-bold">100%</h4>
+                <p class="text-[10px] md:text-xs text-gray-500 uppercase">
+                  Python
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="order-1 lg:order-2 flex justify-center items-end relative"
+            data-aos="fade-left"
+          >
+            <div
+              class="relative w-full max-w-[280px] md:max-w-[450px] aspect-[4/5] md:h-[550px]"
+            >
+              <div
+                class="absolute top-20 right-10 w-48 h-48 md:w-64 md:h-64 bg-brand/40 rounded-full mix-blend-screen filter blur-[80px] opacity-60 animate-blob"
+              ></div>
+              <div
+                class="absolute bottom-10 left-10 w-48 h-48 md:w-64 md:h-64 bg-purple-500/30 rounded-full mix-blend-screen filter blur-[80px] opacity-60 animate-blob animation-delay-2000"
+              ></div>
+
+              <img
+                id="hero-image"
+                src="{% static 'portfolio/profile-dark.png' %}"
+                data-light="{% static 'portfolio/profile-light.png' %}"
+                data-dark="{% static 'portfolio/profile-dark.png' %}"
+                alt="Profile"
+                class="tshirt-swap relative z-20 aspect-square w-full h-auto rounded-full object-contain object-center [mask-image:linear-gradient(to_bottom,black_75%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_75%,transparent_100%)] drop-shadow-2xl"
+              />
+
+              <div
+                class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-lightBase dark:from-darkCanvas to-transparent z-30 opacity-80 pointer-events-none"
+              ></div>
+
+              <div
+                class="absolute bottom-20 -left-2 md:-left-6 glass p-3 md:p-4 rounded-2xl animate-bounce shadow-xl z-40 border border-white/10"
+                style="animation-duration: 4s"
+              >
+                <i
+                  class="fa-brands fa-python text-2xl md:text-4xl text-brand"
+                ></i>
+              </div>
+              <div
+                class="absolute top-20 -right-2 md:-right-6 glass p-3 md:p-4 rounded-2xl animate-bounce shadow-xl z-40 border border-white/10"
+                style="animation-duration: 4s"
+              >
+                <i
+                  class="fa-brands fa-github text-2xl md:text-4xl text-brand"
+                ></i>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="about"
+          class="p-6 md:p-16 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-black/20"
+        >
+          <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-brand text-xs font-bold uppercase tracking-wider mb-4"
+              >
+                <i class="fa-solid fa-user"></i> About Me
+              </div>
+              <h2 class="text-3xl font-bold mb-6">Student & Developer</h2>
+              <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                I am a student of
+                <b>Artificial Intelligence & Data Science</b> with a singular
+                focus on the <b>Python</b> ecosystem. With 3 years of
+                experience, I bridge the gap between robust web development
+                (Django) and intelligent data systems, building everything from
+                e-commerce platforms to personal AI assistants.
+              </p>
+              <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                When I'm not coding, I'm exploring new technologies,
+                contributing to open source, or learning about system
+                architecture.
+              </p>
+
+              <a
+                href="{% static 'portfolio/PANKAJ_JEENGAR_RESUME.pdf' %}"
+                download="Pankaj_Jeengar_Resume.pdf"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-brand hover:text-brand transition shadow-sm font-semibold text-sm group"
+              >
+                <i class="fa-solid fa-download group-hover:animate-bounce"></i>
+                Download Resume
+              </a>
+            </div>
+
+            <div class="space-y-4" data-aos="fade-left">
+              <div
+                class="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center gap-5 hover:border-brand/50 transition duration-300 shadow-sm"
+              >
+                <div
+                  class="w-14 h-14 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-brand shrink-0"
+                >
+                  <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg">Education</h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    B.Tech CS (AI & DS)
+                  </p>
+                  <span class="text-xs text-brand font-semibold"
+                    >2023 - 2027</span
+                  >
+                </div>
+              </div>
+
+              <div
+                class="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center gap-5 hover:border-brand/50 transition duration-300 shadow-sm"
+              >
+                <div
+                  class="w-14 h-14 rounded-xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 shrink-0"
+                >
+                  <i class="fa-solid fa-laptop-code text-2xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg">Current Focus</h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Gen AI Engineer
+                  </p>
+                  <span class="text-xs text-purple-500 font-semibold"
+                    >Generative AI, LangChain</span
+                  >
+                </div>
+              </div>
+
+              <div
+                class="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center gap-5 hover:border-brand/50 transition duration-300 shadow-sm"
+              >
+                <div
+                  class="w-14 h-14 rounded-xl bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600 shrink-0"
+                >
+                  <i class="fa-solid fa-location-dot text-2xl"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-lg">Jaipur, India</h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Open to Work
+                  </p>
+                  <span class="text-xs text-green-500 font-semibold"
+                    >Based in Rajasthan</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="skills"
+          class="p-6 md:p-16 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-transparent"
+        >
+          <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <div data-aos="fade-right">
+              <h2 class="text-3xl font-bold mb-6">Technical Arsenal</h2>
+              <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                My toolkit is built for data-driven applications. From training
+                models to deploying them on the web, I rely on a specialized
+                Python-centric stack.
+              </p>
+
+              <div class="space-y-4">
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center text-brand shrink-0"
+                  >
+                    <i class="fa-solid fa-brain"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm">AI & Data Science</h4>
+                    <p class="text-xs text-gray-500">
+                      PyTorch, Pandas, Scikit-Learn
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center text-brand shrink-0"
+                  >
+                    <i class="fa-brands fa-python"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm">Full Stack Python</h4>
+                    <p class="text-xs text-gray-500">
+                      Django, FastAPI, Selenium
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div data-aos="fade-left">
+              <div class="flex flex-wrap gap-3">
+                {% for skill in skills %}
+                <div
+                  class="group px-5 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center gap-3 shadow-sm hover:shadow-md hover:border-brand/50 hover:-translate-y-1 transition-all duration-300 cursor-default"
+                >
+                  <i
+                    class="{{ skill.icon_class }} text-2xl text-gray-400 group-hover:text-brand transition-colors duration-300 transform group-hover:scale-110"
+                  ></i>
+
+                  <span
+                    class="font-bold text-sm text-gray-600 dark:text-gray-300 group-hover:text-brand transition-colors duration-300"
+                  >
+                    {{ skill.name }}
+                  </span>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">Add skills in Django Admin.</p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="projects"
+          class="p-6 md:p-16 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-black/20"
+        >
+          <div
+            class="flex flex-col sm:flex-row justify-between items-end mb-12 gap-4"
+          >
+            <div>
+              <h2 class="text-3xl font-bold mb-2">Featured Projects</h2>
+              <p class="text-gray-500">Things I've built recently.</p>
+            </div>
+            <a href="#" class="text-brand font-bold text-sm hover:underline"
+              >View All <i class="fa-solid fa-arrow-right ml-1"></i
+            ></a>
+          </div>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for project in projects %}
+            <div
+              class="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:border-brand/50 transition duration-300"
+              data-aos="fade-up"
+            >
+              <div class="h-48 overflow-hidden relative">
+                <img
+                  src="{{ project.image.url }}"
+                  alt="{{ project.title }}"
+                  class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                />
+                <div
+                  class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-4"
+                >
+                  {% if project.github_link %}
+                  <a
+                    href="{{ project.github_link }}"
+                    class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand hover:text-white transition"
+                    ><i class="fa-brands fa-github"></i
+                  ></a>
+                  {% endif %} {% if project.live_link %}
+                  <a
+                    href="{{ project.live_link }}"
+                    class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black hover:bg-brand hover:text-white transition"
+                    ><i class="fa-solid fa-link"></i
+                  ></a>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="p-6">
+                <h3
+                  class="text-lg font-bold mb-2 group-hover:text-brand transition"
+                >
+                  {{ project.title }}
+                </h3>
+                <p class="text-sm text-gray-500 mb-4 line-clamp-2">
+                  {{ project.description }}
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  {% for tech in project.technologies.all|slice:":3" %}
+                  <span
+                    class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-500 rounded border border-gray-200 dark:border-gray-700"
+                    >{{ tech.name }}</span
+                  >
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            {% empty %}
+            <p class="col-span-3 text-center py-10 text-gray-500">
+              No projects yet.
+            </p>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section id="contact" class="p-6 md:p-16">
+          <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-6">Let's Work Together</h2>
+            <p class="text-gray-500 mb-10">
+              Have a project in mind? Send me a message.
+            </p>
+
+            {% if messages %} {% for message in messages %}
+            <div
+              class="p-4 mb-6 bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-lg border border-blue-200 dark:border-blue-800"
+            >
+              {{ message }}
+            </div>
+            {% endfor %} {% endif %}
+
+            <form method="POST" class="text-left space-y-5">
+              {% csrf_token %}
+              <div class="grid md:grid-cols-2 gap-5">
+                <div>
+                  <label
+                    class="block text-xs font-bold uppercase text-gray-500 mb-1"
+                    >Name</label
+                  >
+                  {{ form.name }}
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-bold uppercase text-gray-500 mb-1"
+                    >Email</label
+                  >
+                  {{ form.email }}
+                </div>
+              </div>
+              <div>
+                <label
+                  class="block text-xs font-bold uppercase text-gray-500 mb-1"
+                  >Message</label
+                >
+                {{ form.message }}
+              </div>
+              <button
+                type="submit"
+                class="w-full py-4 bg-brand hover:bg-brandDark text-white font-bold rounded-lg transition shadow-lg shadow-brand/20"
+              >
+                Send Message
+              </button>
+            </form>
+
+            <div class="mt-12 flex justify-center gap-8 text-gray-400">
+              <a
+                href="https://github.com/PankajJeengar1121"
+                class="hover:text-brand transition"
+                ><i class="fa-brands fa-github text-xl"></i
+              ></a>
+              <a
+                href="https://www.linkedin.com/in/pankajjeengar/"
+                class="hover:text-brand transition"
+                ><i class="fa-brands fa-linkedin text-xl"></i
+              ></a>
+              <a
+                href="https://x.com/PANKAJ15180976"
+                class="hover:text-brand transition"
+                ><i class="fa-brands fa-x-twitter text-xl"></i
+              ></a>
+            </div>
+          </div>
+        </section>
+
+        <footer
+          class="p-8 border-t border-gray-100 dark:border-gray-800 text-center text-xs text-gray-500"
+        >
+          <p>&copy; 2026 Pankaj Jeengar.</p>
+        </footer>
+      </main>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      // Init Animation Library
+      AOS.init({ duration: 800, once: true });
+
+      const toggleBtn = document.getElementById("theme-toggle");
+      const themeIcon = document.getElementById("theme-icon");
+      const html = document.documentElement;
+      const heroImg = document.getElementById("hero-image");
+
+      // Mobile Menu Logic
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileLinks = document.querySelectorAll(".mobile-link");
+
+      mobileMenuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+        const icon = mobileMenuBtn.querySelector("i");
+        if (mobileMenu.classList.contains("hidden")) {
+          icon.classList.remove("fa-xmark");
+          icon.classList.add("fa-bars");
+        } else {
+          icon.classList.remove("fa-bars");
+          icon.classList.add("fa-xmark");
+        }
+      });
+
+      // Close mobile menu when a link is clicked
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          mobileMenuBtn.querySelector("i").classList.add("fa-bars");
+          mobileMenuBtn.querySelector("i").classList.remove("fa-xmark");
+        });
+      });
+
+      // Swap Image Function
+      // Swap Image Function
+      function swapImage(src) {
+        if (!heroImg) return;
+        heroImg.src = src; // Instant change
+      }
+
+      // Set Theme Function
+      function setTheme(isDark) {
+        if (isDark) {
+          html.classList.add("dark");
+          themeIcon.classList.replace("fa-moon", "fa-sun");
+          localStorage.theme = "dark";
+          // Swap to Dark Mode Image
+          if (heroImg) swapImage(heroImg.getAttribute("data-dark"));
+        } else {
+          html.classList.remove("dark");
+          themeIcon.classList.replace("fa-sun", "fa-moon");
+          localStorage.theme = "light";
+          // Swap to Light Mode Image
+          if (heroImg) swapImage(heroImg.getAttribute("data-light"));
+        }
+      }
+
+      // Initial Load
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        setTheme(true);
+      } else {
+        setTheme(false);
+      }
+
+      // Toggle Click
+      toggleBtn.addEventListener("click", () => {
+        setTheme(!html.classList.contains("dark"));
+      });
+    </script>
+    <script>
+      const canvas = document.getElementById("particleCanvas");
+      const ctx = canvas.getContext("2d");
+      let particles = [];
+
+      // Reduce particle count on mobile for performance
+      const particleCount = window.innerWidth < 768 ? 30 : 60;
+
+      window.addEventListener("resize", resizeCanvas);
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 1;
+          this.speedX = Math.random() * 1 - 0.5;
+          this.speedY = Math.random() * 1 - 0.5;
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (this.x > canvas.width) this.x = 0;
+          if (this.x < 0) this.x = canvas.width;
+          if (this.y > canvas.height) this.y = 0;
+          if (this.y < 0) this.y = canvas.height;
+        }
+        draw() {
+          const isDark = document.documentElement.classList.contains("dark");
+          ctx.fillStyle = isDark
+            ? "rgba(37, 99, 235, 0.5)"
+            : "rgba(37, 99, 235, 0.2)";
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function init() {
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const isDark = document.documentElement.classList.contains("dark");
+        const lineColor = isDark
+          ? "rgba(37, 99, 235, 0.15)"
+          : "rgba(37, 99, 235, 0.05)";
+
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          particles[i].draw();
+          for (let j = i; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 150) {
+              ctx.strokeStyle = lineColor;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+
+      init();
+      animate();
+    </script>
+  </body>
+</html>
