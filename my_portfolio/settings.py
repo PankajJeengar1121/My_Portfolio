@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-yy8ns(c=$v50o2czpge7b$6o$@owl5g*tt%02a#7yibx$hzkk%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['.vercel.app', 'now.sh', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -50,9 +50,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# Store sessions in cookies instead of the database (Required for Vercel/SQLite)
-# Store sessions in cookies instead of the database (Required for Vercel)
-SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 ROOT_URLCONF = 'my_portfolio.urls'
 
@@ -78,24 +75,12 @@ WSGI_APPLICATION = 'my_portfolio.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# settings.py
-
-# Check if we are running on Vercel
-if 'VERCEL' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': ':memory:', # Runs in RAM, bypasses read-only errors
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Keep your local database for development
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 
 # Password validation
@@ -141,6 +126,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# settings.py
-# Use this simpler storage to avoid 500 errors on missing files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
