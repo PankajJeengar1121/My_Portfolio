@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-yy8ns(c=$v50o2czpge7b$6o$@owl5g*tt%02a#7yibx$hzkk%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -130,4 +130,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 # Use this simpler storage to prevent crashes on missing files
+# Use the non-manifest storage to prevent 500 errors if a file is missing
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
