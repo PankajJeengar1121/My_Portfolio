@@ -50,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+# Store sessions in cookies instead of the database (Required for Vercel/SQLite)
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 ROOT_URLCONF = 'my_portfolio.urls'
 
