@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 # Store sessions in cookies instead of the database (Required for Vercel/SQLite)
+# Store sessions in cookies instead of the database (Required for Vercel)
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 ROOT_URLCONF = 'my_portfolio.urls'
@@ -129,6 +130,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
-# Use this simpler storage to prevent crashes on missing files
-# Use the non-manifest storage to prevent 500 errors if a file is missing
+# Use this simpler storage to avoid 500 errors on missing files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
