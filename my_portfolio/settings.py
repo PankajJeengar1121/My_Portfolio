@@ -127,4 +127,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Use this simpler storage to prevent crashes on missing files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
